@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tn health Bot</title>
-    <link href="/dist/output.css" rel="stylesheet">
+    <title>Tn Health Bot</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.3/dist/full.css" rel="stylesheet" type="text/css" />
 </head>
@@ -14,49 +13,51 @@
         <div class="hero-content text-center text-neutral-content">
           <div class="max-w-md">
             <h1 class="mb-5 text-5xl font-bold">Hello there!</h1>
-            <p class="mb-5">Medical assitant anytime anywhere!.</p>
-    
-         </div>
+            <p class="mb-5">Medical assistant anytime, anywhere!</p>
+          </div>
         </div>
-      </div>
-   <script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script>
-<script>
-  AWS.config.region = 'us-east-1'; // Change to your Lex bot's region
-  AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: 'us-east-1:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' // Replace with your Cognito Identity Pool ID
-  });
+    </div>
 
-  var lexruntime = new AWS.LexRuntimeV2();
-  var lexUserId = 'user-' + Date.now();
-  var sessionAttributes = {};
+    <div class="flex flex-col items-center justify-center p-5">
+        <div id="chatbox" class="border p-4 w-96 h-60 overflow-auto bg-gray-100 rounded-lg"></div>
+        <input type="text" id="userInput" class="border p-2 w-96 mt-3 rounded-lg" placeholder="Type a message..." />
+        <button onclick="sendMessage()" class="bg-blue-500 text-white px-4 py-2 mt-3 rounded-lg">Send</button>
+    </div>
 
-  function sendMessage() {
-    var inputText = document.getElementById('userInput').value;
-    document.getElementById('chatbox').innerHTML += "<p>User: " + inputText + "</p>";
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aws-sdk/2.1307.0/aws-sdk.min.js"></script>
+    <script>
+        AWS.config.region = 'us-east-1'; 
+        AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+            IdentityPoolId: 'us-east-1:90086c0e-2938-4418-b9ac-1d7a78fe77e4'
+        });
 
-    var params = {
-      botId: 'YOUR_BOT_ID', // Replace with your Lex bot ID
-      botAliasId: 'YOUR_ALIAS_ID', // Replace with your bot alias ID
-      localeId: 'en_US',
-      sessionId: lexUserId,
-      text: inputText
-    };
+        var lexruntime = new AWS.LexRuntimeV2();
+        var lexUserId = 'user-' + Date.now();
+        var sessionAttributes = {};
 
-    lexruntime.recognizeText(params, function(err, data) {
-      if (err) {
-        console.log(err, err.stack);
-      } else {
-        document.getElementById('chatbox').innerHTML += "<p>Bot: " + data.messages[0].content + "</p>";
-      }
-    });
+        function sendMessage() {
+            var inputText = document.getElementById('userInput').value;
+            document.getElementById('chatbox').innerHTML += "<p class='text-blue-600'><b>User:</b> " + inputText + "</p>";
 
-    document.getElementById('userInput').value = '';
-  }
-</script>
+            var params = {
+                botId: 'E7AOO1HLC3', 
+                botAliasId: 'TSTALIASID',
+                localeId: 'en_US',
+                sessionId: us-east-1_oqce2GEC8
+,
+                text: inputText 
+            };
 
-<div id="chat-container">
-  <div id="chatbox"></div>
-  <input type="text" id="userInput" placeholder="Type a message..." />
-  <button onclick="sendMessage()">Send</button>
-</div>
+            lexruntime.recognizeText(params, function(err, data) {
+                if (err) {
+                    console.error("Error:", err);
+                } else if (data && data.messages && data.messages.length > 0) {
+                    document.getElementById('chatbox').innerHTML += "<p class='text-green-600'><b>Bot:</b> " + data.messages[0].content + "</p>";
+                }
+            });
+
+            document.getElementById('userInput').value = '';
+        }
+    </script>
+</body>
 </html>
