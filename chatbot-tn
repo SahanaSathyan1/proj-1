@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tn health Bot</title>
+    <link href="/dist/output.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.3/dist/full.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="hero min-h-screen" style="background-image: url(https://mcdn.wallpapersafari.com/medium/12/46/1QJUI7.jpg);">
+        <div class="hero-overlay bg-opacity-60"></div>
+        <div class="hero-content text-center text-neutral-content">
+          <div class="max-w-md">
+            <h1 class="mb-5 text-5xl font-bold">Hello there!</h1>
+            <p class="mb-5">Medical assitant anytime anywhere!.</p>
+    
+         </div>
+        </div>
+      </div>
+   <script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script>
+<script>
+  AWS.config.region = 'us-east-1'; // Change to your Lex bot's region
+  AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+    IdentityPoolId: 'us-east-1:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' // Replace with your Cognito Identity Pool ID
+  });
+
+  var lexruntime = new AWS.LexRuntimeV2();
+  var lexUserId = 'user-' + Date.now();
+  var sessionAttributes = {};
+
+  function sendMessage() {
+    var inputText = document.getElementById('userInput').value;
+    document.getElementById('chatbox').innerHTML += "<p>User: " + inputText + "</p>";
+
+    var params = {
+      botId: 'YOUR_BOT_ID', // Replace with your Lex bot ID
+      botAliasId: 'YOUR_ALIAS_ID', // Replace with your bot alias ID
+      localeId: 'en_US',
+      sessionId: lexUserId,
+      text: inputText
+    };
+
+    lexruntime.recognizeText(params, function(err, data) {
+      if (err) {
+        console.log(err, err.stack);
+      } else {
+        document.getElementById('chatbox').innerHTML += "<p>Bot: " + data.messages[0].content + "</p>";
+      }
+    });
+
+    document.getElementById('userInput').value = '';
+  }
+</script>
+
+<div id="chat-container">
+  <div id="chatbox"></div>
+  <input type="text" id="userInput" placeholder="Type a message..." />
+  <button onclick="sendMessage()">Send</button>
+</div>
+</html>
